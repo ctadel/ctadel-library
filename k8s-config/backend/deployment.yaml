@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cl-backend
+  namespace: ctadel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cl-backend
+  template:
+    metadata:
+      labels:
+        app: cl-backend
+    spec:
+      containers:
+      - name: backend
+        image: https://hub.docker.com/r/ctadel/backend-library
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: postgresql+asyncpg://postgres:postgres@cl-postgres.ctadel.svc.cluster.local:5432/app_db

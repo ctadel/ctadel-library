@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cl-frontend
+  namespace: ctadel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cl-frontend
+  template:
+    metadata:
+      labels:
+        app: cl-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: https://hub.docker.com/r/ctadel/frontend-library
+        ports:
+        - containerPort: 80

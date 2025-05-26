@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cl-postgres
+  namespace: ctadel
+spec:
+  selector:
+    app: cl-postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
