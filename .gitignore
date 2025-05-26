@@ -1,0 +1,71 @@
+# --- General ---
+*.log
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.env
+.env.*
+!.env.sample
+
+# --- Python ---
+venv/
+.env/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+alembic/versions/*.pyc
+
+# --- Alembic (but keep migration files) ---
+alembic/versions/__pycache__/
+
+# --- Angular ---
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/cache/
+/frontend/.angular/config.json
+
+# --- VS Code ---
+.vscode/
+*.code-workspace
+
+# --- Docker ---
+/postgres_data/
+*.pid
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Optional: Ignore IDE configs ---
+.idea/
+*.iml
+
+# --- Optional: Coverage reports ---
+coverage.xml
+*.cover
+*.cov
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Frontend env ---
+/frontend/.env
+/frontend/.env.*
+
+# --- Backend build ---
+/backend/__pycache__/
+/backend/.pytest_cache/
+/backend/.mypy_cache/
+/backend/.coverage
+/backend/htmlcov/
+/backend/instance/
+
+# --- Optional: ignore compiled frontend map files ---
+*.js.map
+*.css.map
