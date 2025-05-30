@@ -9,12 +9,17 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
     ports:
-      - "5432:5432"
+      - "15432:5432"
 
   cl_backend_migrate:
     container_name: cl_postgres_migrate
@@ -24,23 +29,23 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     command: alembic upgrade head
     depends_on:
-      - cl_postgres
+      cl_postgres:
+        condition: service_healthy
     networks:
       - app-network
 
   cl_backend:
     container_name: cl_backend
-    ports:
-    - "8000:8000"
-
     build:
       context: ./backend
     environment:
       DATABASE_URL: ${DATABASE_URL}
     command: python run.py
     depends_on:
-      - cl_postgres
-      - cl_backend_migrate
+      cl_backend_migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
     networks:
       - app-network
 
@@ -52,6 +57,28 @@ services:
       - "4200:80"
     depends_on:
       - cl_backend
+    networks:
+      - app-network
+
+  cl_post_setup:
+    container_name: cl_post_setup
+    build:
+      context: ./backend
+    command: >
+      sh -c "
+        apt-get update && apt-get install -y curl &&
+        echo 'Waiting for backend to be ready...' &&
+        until curl -s http://cl_backend:8000/settings; do sleep 2; done &&
+        echo 'Backend is ready. Running setup scripts...' &&
+        python scripts/create_demo_users.py &&
+        python scripts/create_activity.py -u 5 -d 100
+      "
+    depends_on:
+      cl_backend:
+        condition: service_started
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - API_URL=http://cl_backend:8000
     networks:
       - app-network
 
