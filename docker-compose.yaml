@@ -15,7 +15,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - cl_postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
     ports:
@@ -83,7 +83,7 @@ services:
       - app-network
 
 volumes:
-  postgres_data:
+  cl_postgres_data:
 
 networks:
   app-network:
