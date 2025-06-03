@@ -1,25 +1,38 @@
-name: Auto-merge submodule PR
+name: Auto-merge submodule update branch to master
 
 on:
-  pull_request:
+  push:
     branches:
-      - master
-    paths:
-      - backend/**
-      - frontend/**
+      - sync/backend
+      - sync/frontend
 
 jobs:
-  auto-merge-submodule-pr:
-    name: Auto-merge submodule PR
-    if: |
-      (github.head_ref == 'sync/backend' || github.head_ref == 'sync/frontend') &&
-      github.actor == 'github-actions[bot]'
-
+  merge-to-master:
+    name: Merge submodule update branch into master
     runs-on: ubuntu-latest
 
     steps:
-      - name: Enable auto-merge
-        uses: peter-evans/enable-pull-request-automerge@v3
+      - name: Checkout main repo
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
-          merge-method: squash
+          fetch-depth: 0  # Important to allow full merge
+          ref: master
+
+      - name: Set up Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add remote and fetch
+        run: |
+          git remote add source https://github.com/${{ github.repository }}.git
+          git fetch source ${{ github.ref_name }}
+
+      - name: Merge branch into master
+        run: |
+          git merge --no-ff --no-edit source/${{ github.ref_name }}
+
+      - name: Push to master
+        run: |
+          git push origin master
