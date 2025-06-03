@@ -1,39 +1,25 @@
-name: Auto-Merge Sync Branches to Master
+name: Auto-merge submodule PR
 
 on:
-  push:
+  pull_request:
     branches:
-      - sync/backend
-      - sync/frontend
-
-permissions:
-  contents: write
-  pull-requests: write
+      - master
+    paths:
+      - backend/**
+      - frontend/**
 
 jobs:
-  merge-to-master:
-    name: Merge submodules
+  auto-merge-submodule-pr:
+    name: Auto-merge submodule PR
+    if: |
+      (github.head_ref == 'sync/backend' || github.head_ref == 'sync/frontend') &&
+      github.actor == 'github-actions[bot]'
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
+      - name: Enable auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          token: ${{ secrets.PAT }}
-
-      - name: Set up Git identity
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Fetch all branches
-        run: git fetch origin master
-
-      - name: Merge into master
-        run: |
-          TARGET_BRANCH=${GITHUB_REF##*/}
-          echo "Triggered by branch: $TARGET_BRANCH"
-
-          git checkout master
-          git merge --no-ff origin/$TARGET_BRANCH -m "Auto-merge $TARGET_BRANCH into master"
-          git push origin master
+          token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: squash
