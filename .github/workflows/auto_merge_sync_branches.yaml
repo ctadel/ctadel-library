@@ -1,0 +1,39 @@
+name: Auto-Merge Sync Branches to Master
+
+on:
+  push:
+    branches:
+      - sync/backend
+      - sync/frontend
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-to-master:
+    name: Merge submodules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Set up Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch all branches
+        run: git fetch origin master
+
+      - name: Merge into master
+        run: |
+          TARGET_BRANCH=${GITHUB_REF##*/}
+          echo "Triggered by branch: $TARGET_BRANCH"
+
+          git checkout master
+          git merge --no-ff origin/$TARGET_BRANCH -m "Auto-merge $TARGET_BRANCH into master"
+          git push origin master
