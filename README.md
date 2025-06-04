@@ -1,6 +1,6 @@
-# ctadel Library Web App
+# ctadel Web Library
 
-The **ctadel Library** is a web-based document management and conversational query system. It allows users to upload documents, manage them via a role-based dashboard, and query them through a backend-managed ingestion and retrieval service.
+The **ctadel Web Library** is a web-based document management and conversational query system. It allows users to upload documents, manage them via a role-based dashboard, and query them through a backend-managed ingestion and retrieval service.
 
 This monorepo includes the backend / frontend application (as a submodule), deployment configurations, and infrastructure provisioning files.
 
@@ -10,8 +10,8 @@ This monorepo includes the backend / frontend application (as a submodule), depl
 
 | Path | Description |
 |------|-------------|
-| [`/backend`](./backend) | Python FastAPI service for authentication, document ingestion, retrieval, and chat-based querying. |
-| [`/frontend`](./frontend) | Angular-based web application for user interaction, document upload, search, and dashboard management. |
+| `/backend` [Git Submodule] | Python FastAPI service for authentication, document ingestion, retrieval, and chat-based querying. |
+| `/frontend` [Git Submodule] | Angular-based web application for user interaction, document upload, search, and dashboard management. |
 | [`/k8s`](./k8s) | Kubernetes deployment manifests for backend, frontend, and PostgreSQL services. |
 | [`/docker-compose.yaml`](./docker-compose.yaml) | Docker Compose configuration for local development and testing.
 
@@ -67,11 +67,25 @@ cp backend/.env.sample backend/.env
 docker-compose up --build
 ```
 
+This docker-compose uses the following services:
+ - Backend (FastAPI)
+ - Frontend (Angular)
+ - PostgreSQL (Database)
+ - Python script (Faker) to create some activity for quick demo
+
+ Demo users and documents will be created automatically.
+ Run docker-compose and start using the service as if it is already in production.
+ Login with the following credentials:
+    - For Basic User: `baisc: password`
+    - For Premium User: `premium: password`
+    - For Admin User: `moderator: password`
+
+
 ### 4. Access Services
 
 - Frontend: [http://localhost:4200](http://localhost:4200)
 - Backend API: [http://localhost:8000/docs](http://localhost:8000/docs)
-- PostgreSQL: `localhost:5432`
+- PostgreSQL: `localhost:15432`
 
 ---
 
@@ -118,15 +132,15 @@ Update image tags and environment variables as required per cluster/environment.
 
 ## Github Sub-Repositories
 
-- FastAPI - [Backend](https://github.com/ctadel/jktech-backend)
-- Angular - [Frontend](https://github.com/ctadel/jktech-frontend)
+- Library Backend (FastAPI)- [wlib-backend](https://github.com/ctadel/wlib-backend)
+- Library Frontend (Angular) - [wlib-frontend](https://github.com/ctadel/wlib-frontend)
 
 ---
 
 ## Dockerhub Repositories
 
-- FastAPI - [Backend](https://hub.docker.com/r/ctadel/backend-library)
-- Angular - [Frontend](https://hub.docker.com/r/ctadel/frontend-library)
+- Backend - [Backend](https://hub.docker.com/r/ctadel/backend-library)
+- Frontend - [Frontend](https://hub.docker.com/r/ctadel/frontend-library)
 
 ---
 
