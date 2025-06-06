@@ -50,7 +50,7 @@ This monorepo includes the backend / frontend application (as a submodule), depl
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/ctadel/ctadel-library.git
+git clone https://github.com/ctadel/ctadel-web-library.git
 cd ctadel-library
 ```
 
