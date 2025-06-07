@@ -1,6 +1,6 @@
 [submodule "backend"]
 	path = backend
-	url = git@github.com:ctadel/jktech-backend.git
+	url = git@github.com:ctadel/wlib-backend.git
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:ctadel/jktech-frontend.git
+	url = git@github.com:ctadel/wlib-frontend.git
